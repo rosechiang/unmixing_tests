@@ -14,8 +14,7 @@ rates = [];
 store_noiserate = [];
 store_amp = [];
 store_time = [];
-shot_noise = [];
-avgse = [];
+
 
 rate_generate = rand(1,2);
 while sum(rate_generate) > 1
@@ -33,31 +32,25 @@ plot(X_val,normr,'--',X_val,normg,'--',X_val,normb,'--',X_val, sum_plot,'Display
 title('Spectra');xlabel('channels');ylabel('intensity');
 %plot(X_val, normr,'--', 'DisplayName', 'R', X_val,normg,'--', 'DisplayName', 'G',X_val,normb,'--', 'DisplayName', 'B', X_val, sum_plot,'DisplayName','combination')
 
-for amp = 120:-20:30
+for amp = 30:20:120;
 noise_sum_plot = generate_noise(sum_plot,amp);
 [noise,time,jacobain] = fitdata(1, 100,indvars, noise_sum_plot);
 store_noiserate = [store_noiserate noise];
 store_time = [store_time time];
 store_amp = [store_amp amp];
-% shotnoise = sqrt(noise_sum_plot)./store_amp
 plot(noise_sum_plot,'DisplayName','noise')
+[outcoef,se] = geterror(noise, 100,indvars, noise_sum_plot);
 
-se = geterror(noise, noise_sum_plot,indvars, jacobain);
-temp_avgse = sum(se)/length(indvars(:,1));
-avgse = [avgse; temp_avgse]
 % legend(amp)
 % title(lgd,'noise')
 end
 
 legend('show');
 %            
-figure
-plot(store_time)
-title('running period');xlabel('noise amp');ylabel('time(ms)');
 
-figure
-plot(avgse)
-title('error in different noise');xlabel('noise amp');ylabel('average stand error');
+
+
+
 
 
 % temp = normr + normg + normb;
