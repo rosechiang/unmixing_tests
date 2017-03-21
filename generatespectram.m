@@ -1,63 +1,18 @@
+function [indvars,sum_plot, rates, nindvars] = generatespectram(startfit, endfit)
 
-clear; 
+indvars = [];
+X_val = 1:startfit:endfit;
 
-R = [-16:.1:16];
-G = [-6:.1:32-6];
-B = [-30:.1:2];
-
-X_val = 1:1:100;
-
-normr = normpdf(X_val,10,10);
-normg = normpdf(X_val,50,10);
-normb = normpdf(X_val,75,10);
-rates = [];
-store_noiserate = [];
-store_amp = [];
-store_time = [];
-shot_noise = [];
-avgse = [];
-
-rate_generate = rand(1,2);
-while sum(rate_generate) > 1
-    rate_generate = rand(1,2);
+for i = 1:20:100
+    temp = normpdf(X_val,i,10);
+    indvars = [indvars; temp];
 end
-    rates = [rate_generate, 1-sum(rate_generate)]
 
-indvars = [normr; normg; normb];            %individual spectrum
+nindvars = length(indvars(:,1));
+rates = rategenerate(nindvars); 
 sum_plot = rates*indvars;
-rate = fitdata(1, 100,indvars, sum_plot)
 
-figure;
-hold on
-plot(X_val,normr,'--',X_val,normg,'--',X_val,normb,'--',X_val, sum_plot,'DisplayName','spectrum')
-title('Spectra');xlabel('channels');ylabel('intensity');
-%plot(X_val, normr,'--', 'DisplayName', 'R', X_val,normg,'--', 'DisplayName', 'G',X_val,normb,'--', 'DisplayName', 'B', X_val, sum_plot,'DisplayName','combination')
-
-for amp = 120:-20:30
-noise_sum_plot = generate_noise(sum_plot,amp);
-[noise,time,jacobain] = fitdata(1, 100,indvars, noise_sum_plot);
-store_noiserate = [store_noiserate noise];
-store_time = [store_time time];
-store_amp = [store_amp amp];
-% shotnoise = sqrt(noise_sum_plot)./store_amp
-plot(noise_sum_plot,'DisplayName','noise')
-
-se = geterror(noise, noise_sum_plot,indvars, jacobain);
-temp_avgse = sum(se)/length(indvars(:,1));
-avgse = [avgse; temp_avgse]
-% legend(amp)
-% title(lgd,'noise')
 end
-
-legend('show');
-%            
-figure
-plot(store_time)
-title('running period');xlabel('noise amp');ylabel('time(ms)');
-
-figure
-plot(avgse)
-title('error in different noise');xlabel('noise amp');ylabel('average stand error');
 
 
 % temp = normr + normg + normb;
@@ -66,6 +21,18 @@ title('error in different noise');xlabel('noise amp');ylabel('average stand erro
 % temp = conv(normr,normg)
 
 
+%     
+% norm1 = normpdf(X_val,10,10);
+% norm2 = normpdf(X_val,50,10);
+% norm3 = normpdf(X_val,75,10);
+% norm4 = normpdf(X_val,100,10);
+% norm5 = normpdf(X_val,20,10);
+% indvars = [norm1; norm2; norm3; norm4; norm5];     
+% indvars = [norm1; norm2; norm3; ];            %individual spectrum
+
+% R = [-16:.1:16];
+% G = [-6:.1:32-6];
+% B = [-30:.1:2];
 
 %oise_sum_plot = imnoise(sum_plot, 'poisson');
 %noise_sum_plot = sum_plot+0.003*rand(1,length(sum_plot));

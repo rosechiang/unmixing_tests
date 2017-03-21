@@ -1,15 +1,10 @@
-function [se] = geterror(coef,data,indvars,jacobain)
+function [se] = geterror(nindvars, startfit, endfit, coef, data, indvars, jacobain)
 
 
-	startfit = 1; 
-    endfit = 100;
+
 	fitdata = zeros(100,1);
-    length=endfit-startfit;
-    ???
-	nindvars = length(indvars(:,1));
-	%nindvars = 3; 
-    npts = length(indvars);  % number of channels
-    %npts = 100;
+    len=endfit-startfit;
+    npts = length(indvars);
     invm = []; 
     outcoef= [];
     tempc2 = 0;
@@ -26,7 +21,7 @@ function [se] = geterror(coef,data,indvars,jacobain)
 				tempc2= tempc2 + (fitdata(i)-data(i))^2;
             end
             
-            c2 = tempc2/(length-nindvars);
+            c2 = tempc2/(len-nindvars);
             for i = 1:1:nindvars
             se(i) = sqrt(c2*invm(i,i)); %stand error
             end

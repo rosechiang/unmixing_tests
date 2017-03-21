@@ -1,8 +1,8 @@
 
 
-function [outcoef,running_time,jacobian] = fitdata (startfit, endfit, indvars, data)
+function [outcoef,running_time,jacobian] = fitdata (nindvars, startfit, endfit, indvars, data)
 
-nindvars = length(indvars(:,1));
+
 jacobian=zeros(nindvars);
 jvector=zeros(nindvars,1);
 tic;
