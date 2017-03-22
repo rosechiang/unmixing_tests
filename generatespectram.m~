@@ -1,65 +1,19 @@
+function [indvars,sum_plot, rates] = generatespectram(startfit, endfit, nindvars)
 
-clear; 
-
-
-store_noiserate = [];
-store_amp = [];
-store_time = [];
-shot_noise = [];
-avgse = [];
 indvars = [];
-
-
-startfit = 1; 
-endfit = 100;
 X_val = 1:startfit:endfit;
 
-for i = 1:20:100
-    temp = normpdf(X_val,i,10);
+% how to make nind
+for i = startfit:floor(endfit/nindvars):endfit
+    temp = 2560*normpdf(X_val,i,10);
     indvars = [indvars; temp];
 end
 
 nindvars = length(indvars(:,1));
 rates = rategenerate(nindvars); 
 sum_plot = rates*indvars;
-rate = fitdata(nindvars, startfit, endfit, indvars, sum_plot)
-
-figure;
-hold on
-plot(X_val, indvars, '--', X_val, sum_plot,'DisplayName','spectrum')
-%  plot(X_val,norm1,'--',X_val,norm2,'--',X_val,norm3,'--',X_val, sum_plot,'DisplayName','spectrum')
-
-title('Spectra');xlabel('channels');ylabel('intensity');
-%plot(X_val, normr,'--', 'DisplayName', 'R', X_val,normg,'--', 'DisplayName', 'G',X_val,normb,'--', 'DisplayName', 'B', X_val, sum_plot,'DisplayName','combination')
-
-% add noise with different amp and count the t
-for amp = 120:-20:30
-noise_sum_plot = generate_noise(sum_plot,amp);
-[noise,time,jacobain] = fitdata(nindvars, startfit, endfit, indvars, noise_sum_plot);
-se = geterror(nindvars, startfit, endfit, noise, noise_sum_plot,indvars, jacobain);
-% shotnoise = sqrt(noise_sum_plot)./store_amp
-
-plot(noise_sum_plot,'DisplayName','noise')
-temp_avgse = sum(se)/nindvars;
-
-store_noiserate = [store_noiserate noise];
-store_time = [store_time time];
-store_amp = [store_amp amp];
-avgse = [avgse; temp_avgse];
 
 end
-
-legend('show');
-%            
-figure(2)
-hold on
-plot(store_time)
-title('running period');xlabel('noise amp');ylabel('time(ms)');
-
-figure(3)
-hold on
-plot(avgse)
-title('error in different noise');xlabel('noise amp');ylabel('average stand error');
 
 
 % temp = normr + normg + normb;

@@ -21,7 +21,7 @@ jvector=zeros(nindvars,1);
                 end	 
             end
 		outcoef = jacobian\jvector;
-        outcoef(find(outcoef<0))=0;
+        outcoef = outcoef(find(outcoef<0)
 
 end
 

@@ -1,14 +1,17 @@
-function [indvars,sum_plot, rates, nindvars] = generatespectram(startfit, endfit)
-
+function [indvars,sum_plot, rates] = generatespectram(startfit, endfit, nindvars)
+% generate a spectrum in the combination of nindvars of spectra in rates
 indvars = [];
-X_val = 1:startfit:endfit;
-
-for i = 1:20:100
-    temp = normpdf(X_val,i,10);
+X_val = startfit:1:endfit;
+count = 0;
+% how to make nindvars = row of indvars
+for i = startfit:floor(endfit/nindvars):endfit
+    count = count +1;
+    if count <= nindvars
+    temp = 2560*normpdf(X_val,i,10);
     indvars = [indvars; temp];
+    end    
 end
 
-nindvars = length(indvars(:,1));
 rates = rategenerate(nindvars); 
 sum_plot = rates*indvars;
 

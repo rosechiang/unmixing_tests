@@ -1,6 +1,6 @@
 
 function [rates] = rategenerate(num)
-% rates = [];
+% generate rate whose sum = 1
 rate_generate = rand(1,num-1);
 while sum(rate_generate) > 1
     rate_generate = rand(1,num-1);

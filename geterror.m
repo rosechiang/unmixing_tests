@@ -1,5 +1,5 @@
 function [se] = geterror(nindvars, startfit, endfit, coef, data, indvars, jacobain)
-
+% not using this anymore
 
     invm = []; 
     outcoef= [];
