@@ -7,14 +7,15 @@ count = 0;
 for i = startfit:floor(endfit/nindvars):endfit
     count = count +1;
     if count <= nindvars
-    temp = 2560*normpdf(X_val,i,10);
-    indvars = [indvars; temp];
+        aa= normpdf(X_val,i,10);
+    temp = int16((2^16/max(aa))*aa);
+    indvars = [indvars; double(temp)];
     end    
 end
 
 rates = rategenerate(nindvars); 
-sum_plot = rates*indvars;
-
+sum_plot = int16(rates*indvars); %add weight here 
+sum_plot = double(sum_plot);
 end
 
 

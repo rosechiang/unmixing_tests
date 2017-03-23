@@ -1,6 +1,6 @@
-function [noiseplot] = generate_noise(sum_plot)
+function [noiseplot] = generate_noise(sum_plot,endfit)
 % add shot noise
-    for i = 1:100
+    for i = 1:endfit
         r = rand(1);
         if r > 0.6
             a = - 1;

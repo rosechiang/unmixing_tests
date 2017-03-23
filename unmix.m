@@ -1,53 +1,63 @@
-clear; 
-
+clear;
+matsize = 100;
 startfit = 1;
-endfit = 100; %number of channels
-nindvars = 5; %number of spectrum
+endfit = 10; %number of channels
+nindvars = 3; %number of spectrum
 noiseamp = 0;
 X_val = startfit:1:endfit;
-store_noiserate = [];
+% store_noiserate = [];
 store_amp = [];
 store_time = [];
-error = [];
-avgse = [];
+% error = []; 
+% avgse = [];
 
-dataspectra = zeros(100,100,endfit); % store the sum_plot in each i,j
-datasnoise = zeros(100,100,endfit);  % store sum_plot add noise
-datasnoisetemp = zeros(100,100,endfit);
-datarates = zeros(100,100,nindvars);
+dataspectra = zeros(matsize,matsize,endfit); % store the sum_plot in each i,j
+% datasnoise = zeros(100,100,endfit);  % store sum_plot add noise
+% datasnoisetemp = zeros(100,100,endfit);
+datarates = zeros(matsize,matsize,nindvars);
 % dataratefound = zeros(100,100,nindvars);
 % dataratefoundnoise = zeros(100,100,nindvars);
 
 
 % [indvars, sum_plot, rates, nindvars] = generatespectram(startfit, endfit);
-for i = 1:100
-    for j = 1:100
+for i = 1:matsize
+    for j = 1:matsize
         [indvars, sum_plot, rates] = generatespectram(startfit, endfit, nindvars);
         dataspectra(i,j,:) = sum_plot;
         datarates(i,j,:) = rates; 
-        datasnoise(i,j,:) = generate_noise(sum_plot);
+%         datasnoise(i,j,:) = generate_noise(sum_plot,endfit);
     end
 end
 
-[coef, timewonoise] = fitcubedata(nindvars, startfit, endfit, indvars, dataspectra);
+[coef, timewonoise] = cubedatafit(nindvars, startfit, endfit, indvars, dataspectra);
+% [temp,timenoise] = cubedatafit (nindvars, startfit, endfit, indvars,datasnoise);  
 % dataratefound = coef;
 store_time = [timewonoise];
-store_amp = [0];
+store_amp = [ noiseamp ];
+% % 
+% % figure(1);
+% % hold on
+% % plot(X_val, indvars, '--', X_val, squeeze(dataspectra(1,1,:)) ,'DisplayName','spectrum')
+% % title('Spectra');xlabel('channels');ylabel('intensity');
+
+datanoise = cubenoise(dataspectra,endfit);    
 
 for k = 1:5
-        addnoise = cubenoise(datasnoise);
-        [temp,time] = fitcubedata (nindvars, startfit, endfit, indvars,addnoise);  
-        dataratefoundnoise = temp;
+ 
+        [temp,time] = cubedatafit (nindvars, startfit, endfit, indvars,datanoise); 
+%       dataratefoundnoise = temp;
         noiseamp = noiseamp +1; 
+        datanoise = cubenoise(datanoise,endfit);
         store_amp = [store_amp noiseamp];
         store_time = [store_time time];
-        datasnoise = addnoise;
-        error = [error cubeerror(coef,temp)];
-                
+%         error = [error cubeerror(coef,temp)];
+% %         figure(1);
+% %         hold on
+% %         plot(X_val, squeeze(datanoise(1,1,:)),'DisplayName','noise')
         
 end 
     
-goodnessOfFit(squeeze(coef(1,1,:)),squeeze(dataratefoundnoise(1,1,:)),'MSE')
+% goodnessOfFit(squeeze(coef(1,1,:)),squeeze(dataratefoundnoise(1,1,:)),'MSE')
 
 % datasnoise2 = zeros(100,100,endfit);
 % datasnoise3 = zeros(100,100,endfit);
@@ -66,10 +76,6 @@ goodnessOfFit(squeeze(coef(1,1,:)),squeeze(dataratefoundnoise(1,1,:)),'MSE')
    
 % 
 % 
-% figure;
-% hold on
-% plot(X_val, indvars, '--', X_val, sum_plot,'DisplayName','spectrum')
-% title('Spectra');xlabel('channels');ylabel('intensity');
 
 
 % add noise with different amp and count the time period find best fit
