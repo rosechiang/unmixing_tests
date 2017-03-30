@@ -9,6 +9,7 @@ jvector=zeros(nindvars,1);
 			for i = 1:1:nindvars
 				for j = 1:1:i
 					for k = startfit:1:endfit
+%                         jacobian(i,j) =  jacobian(i,j) + (indvars(i,k)*indvars(j,k)).*weights(i);
                         jacobian(i,j) =  jacobian(i,j) + indvars(i,k)*indvars(j,k);
                     end
 					if j~=i
@@ -17,7 +18,8 @@ jvector=zeros(nindvars,1);
                 end
         
 				for k = startfit:1:endfit
-						jvector(i) = jvector(i) + data(k)*indvars(i,k);
+% 						jvector(i) = jvector(i) + (data(k)*indvars(i,k)).*weights(i);
+                        jvector(i) = jvector(i) + (data(k)*indvars(i,k));    
                 end	 
             end
 		outcoef = jacobian\jvector;

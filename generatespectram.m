@@ -1,4 +1,4 @@
-function [indvars,sum_plot, rates] = generatespectram(startfit, endfit, nindvars)
+function [indvars,sum_plot, rates] = generatespectram(startfit, endfit, nindvars, weights)
 % generate a spectrum in the combination of nindvars of spectra in rates
 indvars = [];
 X_val = startfit:1:endfit;
@@ -7,14 +7,15 @@ count = 0;
 for i = startfit:floor(endfit/nindvars):endfit
     count = count +1;
     if count <= nindvars
-        aa= normpdf(X_val,i,10);
-    temp = int16((2^16/max(aa))*aa);
+       aa= normpdf(X_val,i,10);
+%     temp = int16((2^16/(10*max(aa)))*floor(10*aa));
+       temp = (2^16/(1000*max(aa)))*floor(1000*aa);
     indvars = [indvars; double(temp)];
     end    
 end
-
+windvars = weights .* indvars;
 rates = rategenerate(nindvars); 
-sum_plot = int16(rates*indvars); %add weight here 
+sum_plot = int16(rates*windvars); %add weight here 
 sum_plot = double(sum_plot);
 end
 

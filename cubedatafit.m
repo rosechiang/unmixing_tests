@@ -1,4 +1,4 @@
-function [coefcube,running_time] = cubedatafit (nindvars, startfit, endfit, indvars,cubedata)
+function [coefcube,running_time] = cubedatafit (nindvars, startfit, endfit, indvars, cubedata)
 tic;
 getxy = size(cubedata);
 coefcube = zeros(getxy(1),getxy(2),nindvars);
