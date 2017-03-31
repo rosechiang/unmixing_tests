@@ -97,11 +97,10 @@ figure; plot (mean(b1));hold on; plot(mean(b2)); title('membrane spectrum')
 % plot(g4)
 % title('')
 
-figure; hold on
+figure(2); hold on
 G = (mean(g1)+mean(g2))/2;
 R = (mean(r1)+mean(r2))/2;
 B = (mean(b1)+mean(b2))/2;
-R(1:15) = 0;
 plot(G)
 plot(R)
 plot(B)
@@ -110,7 +109,7 @@ title('Indivual Spectrum for unmixing')
 nindvars = 3;
 startfit = 1; 
 endfit = 32;
-indvars = [G;R;B];
+indvars = [G';R';B'];
 
 
 [coef, timewonoise] = cubedatafit(nindvars, startfit, endfit, indvars, mat2);
