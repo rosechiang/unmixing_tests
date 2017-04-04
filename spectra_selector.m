@@ -7,7 +7,7 @@ aa= squeeze(mat);
 
 subplot_handle = subplot(2,1,1);
 fig_handle = imagesc(mean(aa,3));
-
+axis square;
 
 h=imrect();
 
