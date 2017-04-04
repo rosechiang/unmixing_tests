@@ -1,4 +1,4 @@
-function [data]=lsmfileread(filename,z_position)
+function [data]=lsmfileread_single_z(filename,z_position)
 
 % This function reads lambda scans over time LSM files saved with Zen 2009.
 % For some reason they only know, LSM file is structured as a sequence of
